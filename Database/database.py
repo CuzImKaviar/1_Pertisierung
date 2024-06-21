@@ -16,16 +16,39 @@ class Database:
         self.cursor.execute(create_table_sql)
         self.conn.commit()
     
-    def insert_record(self, table_name, data):
+    def insert_record(self, table_name, data, topic = None):
         """
         Inserts a record into the specified table.
         data should be a dictionary where keys are column names and values are the data to be inserted.
         """
-        columns = ', '.join(data.keys())
-        placeholders = ', '.join('?' * len(data))
-        insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        
+        if topic == "iot1/teaching_factory_fast/scale/final_weight":
+            columns = ', '.join(data.keys())
+            placeholders = ', '.join('?' * len(data))
+            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+            
+        elif topic == "iot1/teaching_factory_fast/temperature":
+            columns = ', '.join(data.keys() + str(i))
+            placeholders = ', '.join('?' * len(data))
+            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+            if i == 3:
+                i = 1
+            else:
+                i += 1
+
+        elif topic == "iot1/teaching_factory_fast/vibration":
+            columns = ', '.join(data.keys())
+            placeholders = ', '.join('?' * len(data))
+            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        
+        elif topic == "iot1/teaching_factory_fast/scale/is_cracked":
+            columns = ', '.join(data.keys())
+            placeholders = ', '.join('?' * len(data))
+            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+            
         self.cursor.execute(insert_sql, tuple(data.values()))
         self.conn.commit()
+
 
     def fetch_records(self, table_name, condition=None):
         """
