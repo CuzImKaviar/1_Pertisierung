@@ -16,41 +16,62 @@ class Database:
         self.cursor.execute(create_table_sql)
         self.conn.commit()
     
-    def insert_record(self, table_name, data, topic = None):
-        """
-        Inserts a record into the specified table.
-        data should be a dictionary where keys are column names and values are the data to be inserted.
-        """
-        
-        if topic == "iot1/teaching_factory_fast/scale/final_weight":
-            columns = ', '.join(data.keys())
-            placeholders = ', '.join('?' * len(data))
-            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-            
-        elif topic == "iot1/teaching_factory_fast/temperature":
-            columns = ', '.join(data.keys() + str(i))
-            placeholders = ', '.join('?' * len(data))
-            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-            if i == 3:
-                i = 1
-            else:
-                i += 1
-
-        elif topic == "iot1/teaching_factory_fast/vibration":
-            columns = ', '.join(data.keys())
-            placeholders = ', '.join('?' * len(data))
-            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-        
-        elif topic == "iot1/teaching_factory_fast/scale/is_cracked":
-            columns = ', '.join(data.keys())
-            placeholders = ', '.join('?' * len(data))
-            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-        
+    def handle_final_weight(self, data, table_name):
+        columns = ', '.join(data.keys())
+        placeholders = ', '.join('?' * len(data))
+        insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        return insert_sql
+    
+    def handle_temperature(self, data, table_name, i):
+        columns = ', '.join(list(data.keys()) + [str(i)])
+        placeholders = ', '.join('?' * len(data))
+        insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        if i == 3:
+            i = 1
         else:
-            columns = ', '.join(data.keys())
-            placeholders = ', '.join('?' * len(data))
-            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-            
+            i += 1
+        return insert_sql, i
+    
+    def handle_vibration(self, data, table_name):
+        columns = ', '.join(data.keys())
+        placeholders = ', '.join('?' * len(data))
+        insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        return insert_sql
+    
+    def handle_is_cracked(self, data, table_name):
+        columns = ', '.join(data.keys())
+        placeholders = ', '.join('?' * len(data))
+        insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        return insert_sql
+    
+    def handle_dispenser(self, data, table_name):
+        data.pop('dispenser')
+        columns = ', '.join(data.keys())
+        placeholders = ', '.join('?' * len(data))
+        insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        return insert_sql
+    
+    def handle_default(self, data, table_name):
+        columns = ', '.join(data.keys())
+        placeholders = ', '.join('?' * len(data))
+        insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        return insert_sql
+    
+    def insert_record(self, topic, data, table_name, i):
+        switcher = {
+            "iot1/teaching_factory_fast/scale/final_weight": self.handle_final_weight,
+            "iot1/teaching_factory_fast/temperature": self.handle_temperature,
+            "iot1/teaching_factory_fast/vibration": self.handle_vibration,
+            "iot1/teaching_factory_fast/scale/is_cracked": self.handle_is_cracked,
+            "iot1/teaching_factory_fast/dispenser_red": self.handle_dispenser,
+            "iot1/teaching_factory_fast/dispenser_blue": self.handle_dispenser,
+            "iot1/teaching_factory_fast/dispenser_green": self.handle_dispenser
+        }
+        handler = switcher.get(topic, self.handle_default)
+        if handler == self.handle_temperature:
+            insert_sql, i = handler(data, table_name, i)
+        else:
+            insert_sql = handler(data, table_name)
         self.cursor.execute(insert_sql, tuple(data.values()))
         self.conn.commit()
 
@@ -85,7 +106,7 @@ class Database:
 if __name__ == "__main__":
     db = Database('teaching_factory.db')
     db.create_table('Bottles', {'id': 'INTEGER PRIMARY KEY', 'final_weight': 'FLOAT', 'is_cracked': 'BOOLEAN'})
-    db.create_table('Dispenser', {'color': 'TEXT', 'time_stamp': 'INTEGER PRIMARY KEY', 'vibration_avg': 'FLOAT', 'fill_level_gram': 'FLOAT', 'temp1': 'FLOAT', 'temp2': 'FLOAT', 'temp3': 'FLOAT'})
+    db.create_table('Dispenser Red', {'Bottle Number':'INTEGER', 'time_stamp': 'INTEGER PRIMARY KEY', 'vibration_avg': 'FLOAT', 'fill_level_gram': 'FLOAT'})
     db.create_table('Vibrations', {'id': 'INTEGER', 'index_value': 'INTEGER', 'vibration': 'FLOAT'})
     #db.insert_record('users', {'name': 'Alice', 'age': 30})
     #db.insert_record('users', {'name': 'Bob', 'age': 25})
