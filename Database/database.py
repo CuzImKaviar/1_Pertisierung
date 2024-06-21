@@ -57,23 +57,23 @@ class Database:
     #     insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
     #     return insert_sql
     
-    def insert_record(self, topic, data, table_name, i):
-        switcher = {
-            "iot1/teaching_factory_fast/scale/final_weight": self.handle_final_weight,
-            "iot1/teaching_factory_fast/temperature": self.handle_temperature,
-            "iot1/teaching_factory_fast/vibration": self.handle_vibration,
-            "iot1/teaching_factory_fast/scale/is_cracked": self.handle_is_cracked,
-            "iot1/teaching_factory_fast/dispenser_red": self.handle_dispenser,
-            "iot1/teaching_factory_fast/dispenser_blue": self.handle_dispenser,
-            "iot1/teaching_factory_fast/dispenser_green": self.handle_dispenser
-        }
-        handler = switcher.get(topic, self.handle_default)
-        if handler == self.handle_temperature:
-            insert_sql, i = handler(data, table_name, i)
-        else:
-            insert_sql = handler(data, table_name)
-        self.cursor.execute(insert_sql, tuple(data.values()))
-        self.conn.commit()
+    # def insert_record(self, topic, data, table_name, i):
+    #     switcher = {
+    #         "iot1/teaching_factory_fast/scale/final_weight": self.handle_final_weight,
+    #         "iot1/teaching_factory_fast/temperature": self.handle_temperature,
+    #         "iot1/teaching_factory_fast/vibration": self.handle_vibration,
+    #         "iot1/teaching_factory_fast/scale/is_cracked": self.handle_is_cracked,
+    #         "iot1/teaching_factory_fast/dispenser_red": self.handle_dispenser,
+    #         "iot1/teaching_factory_fast/dispenser_blue": self.handle_dispenser,
+    #         "iot1/teaching_factory_fast/dispenser_green": self.handle_dispenser
+    #     }
+    #     handler = switcher.get(topic, self.handle_default)
+    #     if handler == self.handle_temperature:
+    #         insert_sql, i = handler(data, table_name, i)
+    #     else:
+    #         insert_sql = handler(data, table_name)
+    #     self.cursor.execute(insert_sql, tuple(data.values()))
+    #     self.conn.commit()
 
     def insert_record(self, insert_sql, data):
         """
