@@ -45,6 +45,11 @@ class Database:
             columns = ', '.join(data.keys())
             placeholders = ', '.join('?' * len(data))
             insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        
+        else:
+            columns = ', '.join(data.keys())
+            placeholders = ', '.join('?' * len(data))
+            insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
             
         self.cursor.execute(insert_sql, tuple(data.values()))
         self.conn.commit()
