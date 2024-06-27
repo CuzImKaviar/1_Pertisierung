@@ -75,12 +75,12 @@ class Database:
     #     self.cursor.execute(insert_sql, tuple(data.values()))
     #     self.conn.commit()
 
-    def insert_record(self, insert_sql, data):
+    def insert_record(self, insert_sql, values):
         """
         Inserts a record into the specified table.
         data should be a dictionary where keys are column names and values are the values to insert.
         """
-        self.cursor.execute(insert_sql, tuple(data.values()))
+        self.cursor.execute(insert_sql, tuple(values))
         self.conn.commit()
 
     def exists(self, table_name, condition):
