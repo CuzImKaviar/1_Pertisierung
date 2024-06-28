@@ -1,13 +1,14 @@
 import paho.mqtt.client as mqtt
 from Database.database import Database
+from Config.config import read_config
 import json
 
 
-# MQTT Broker Informationen
-broker = "158.180.44.197"
-port = 1883
+# MQTT Broker Informationen aus der Konfigurationsdatei lesen
 #topics = ["iot1/teaching_factory_fast/ground_truth", "iot1/teaching_factory_fast/dispenser_red", "iot1/teaching_factory_fast/dispenser_blue", "iot1/teaching_factory_fast/dispenser_green", "iot1/teaching_factory_fast/temperature", "iot1/teaching_factory_fast/scale/final_weight", "iot1/teaching_factory_fast/drop_vibration"]
-topics = ["iot1/teaching_factory_fast/drop_vibration", "iot1/teaching_factory_fast/ground_truth"]
+
+broker, port, topics = read_config('config.ini')
+
 # Create the database and tables
 db = Database('./Database/teaching_factory.db')
 #db.create_table('Bottles', {'bottle': 'INTEGER PRIMARY KEY', 'final_weight': 'FLOAT', 'is_cracked': 'BOOLEAN', 'time': 'INTEGER'})
