@@ -1,4 +1,5 @@
 import paho.mqtt.client as mqtt
+from MQTT_client.mqtt_client import on_disconnect, reconnect
 from Database.database import Database
 from Config.config import read_config
 import json
@@ -60,11 +61,16 @@ def on_message(client, userdata, message):
 mqttc = mqtt.Client()
 mqttc.username_pw_set("bobm", "letmein")
 
-# Callback-Funktion zuweisen
+# Callback-Funktionen zuweisen
 mqttc.on_message = on_message
+mqttc.on_disconnect = on_disconnect
 
 # Verbindung herstellen
-mqttc.connect(broker, port, 60)
+try:
+    mqttc.connect(broker, port, 60)
+except Exception as e:
+    print(f"Connection failed: {e}")
+    reconnect(mqttc)
 
 # Zu den Themen abonnieren
 for topic in topics:
