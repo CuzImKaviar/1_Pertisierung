@@ -1,3 +1,9 @@
+import sys
+import os
+
+# Füge das übergeordnete Verzeichnis zum Python-Suchpfad hinzu, damit der Databse_class import endlich korrekt funktionieren
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.')))
+
 from Database.database import Database
 import numpy as np
 import pandas as pd
@@ -5,7 +11,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 
 # Initialize the database
-db = Database('./Database/teaching_factory.db')
+db = Database('../Database/teaching_factory.db')
 
 # Fetch and prepare data for bottle 579
 data_579 = db.fetch_records('Drop_Vibration', 'bottle = 579')
