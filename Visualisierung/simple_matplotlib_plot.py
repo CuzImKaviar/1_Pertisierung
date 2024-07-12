@@ -8,7 +8,6 @@ from Database.database import Database
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn import linear_model
 
 db = Database('../Database/teaching_factory.db')
 data_579 = db.fetch_records('Drop_Vibration', 'bottle = 579')

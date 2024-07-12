@@ -13,12 +13,12 @@ from plotly.subplots import make_subplots
 # Initialize the database
 db = Database('../Database/teaching_factory.db')
 
-# Fetch and prepare data for bottle 579
+# Fetch and prepare data for bottle 579. not cracked
 data_579 = db.fetch_records('Drop_Vibration', 'bottle = 579')
 values_579 = [x[1] for x in data_579]
 linspace_579 = np.linspace(0, 1, num=len(data_579))
 
-# Fetch and prepare data for bottle 822
+# Fetch and prepare data for bottle 822, cracked
 data_822 = db.fetch_records('Drop_Vibration', 'bottle = 822')
 values_822 = [x[1] for x in data_822]
 linspace_822 = np.linspace(0, 1, num=len(data_822))

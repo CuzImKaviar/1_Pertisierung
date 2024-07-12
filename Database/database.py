@@ -15,65 +15,6 @@ class Database:
         create_table_sql = f"CREATE TABLE IF NOT EXISTS {table_name} ({columns_def});"
         self.cursor.execute(create_table_sql)
         self.conn.commit()
-    
-    # def handle_final_weight(self, data, table_name):
-    #     columns = ', '.join(data.keys())
-    #     placeholders = ', '.join('?' * len(data))
-    #     insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-    #     return insert_sql
-    
-    # def handle_temperature(self, data, table_name, i):
-    #     columns = ', '.join(list(data.keys()) + [str(i)])
-    #     placeholders = ', '.join('?' * len(data))
-    #     insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-    #     if i == 3:
-    #         i = 1
-    #     else:
-    #         i += 1
-    #     return insert_sql, i
-    
-    # def handle_vibration(self, data, table_name):
-    #     columns = ', '.join(data.keys())
-    #     placeholders = ', '.join('?' * len(data))
-    #     insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-    #     return insert_sql
-    
-    # def handle_is_cracked(self, data, table_name):
-    #     columns = ', '.join(data.keys())
-    #     placeholders = ', '.join('?' * len(data))
-    #     insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-    #     return insert_sql
-    
-    # def handle_dispenser(self, data, table_name):
-    #     data.pop('dispenser')
-    #     columns = ', '.join(data.keys())
-    #     placeholders = ', '.join('?' * len(data))
-    #     insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-    #     return insert_sql
-    
-    # def handle_default(self, data, table_name):
-    #     columns = ', '.join(data.keys())
-    #     placeholders = ', '.join('?' * len(data))
-    #     insert_sql = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-    #     return insert_sql
-    
-    # def insert_record(self, topic, data, table_name, i):
-    #     switcher = {
-    #         "iot1/teaching_factory_fast/scale/final_weight": self.handle_final_weight,
-    #         "iot1/teaching_factory_fast/temperature": self.handle_temperature,
-    #         "iot1/teaching_factory_fast/vibration": self.handle_vibration,
-    #         "iot1/teaching_factory_fast/scale/is_cracked": self.handle_is_cracked,
-    #         "iot1/teaching_factory_fast/dispenser_red": self.handle_dispenser,
-    #         "iot1/teaching_factory_fast/dispenser_blue": self.handle_dispenser,
-    #         "iot1/teaching_factory_fast/dispenser_green": self.handle_dispenser
-    #     }
-    #     handler = switcher.get(topic, self.handle_default)
-    #     if handler == self.handle_temperature:
-    #         insert_sql, i = handler(data, table_name, i)
-    #     else:
-    #         insert_sql = handler(data, table_name)
-    #     self.cursor.execute(insert_sql, tuple(data.values()))
-    #     self.conn.commit()
 
     def insert_record(self, insert_sql, values):
         """
@@ -118,7 +59,7 @@ class Database:
         """
         self.conn.close()
 
-# Example usage:
+# test von database.py
 if __name__ == "__main__":
     db = Database('teaching_factory_test.db')
     db.create_table('Bottles', {'bottle': 'INTEGER PRIMARY KEY', 'final_weight': 'FLOAT', 'is_cracked': 'BOOLEAN', 'time': 'INTEGER'})
@@ -127,11 +68,4 @@ if __name__ == "__main__":
     db.create_table('Dispenser_green', {'bottle': 'INTEGER PRIMARY KEY', 'time': 'INTEGER', 'vibration_avg': 'FLOAT', 'fill_level_gram': 'FLOAT'})
     db.create_table('Temperature', {'time stamp': 'INTEGER PRIMARY KEY', 'temperature_C1': 'FLOAT', 'temperature_C2': 'FLOAT', 'temperature_C3': 'FLOAT'})
     db.create_table('Vibrations', {'id': 'INTEGER', 'index_value': 'INTEGER', 'vibration': 'FLOAT'})
-    #db.insert_record('users', {'name': 'Alice', 'age': 30})
-    #db.insert_record('users', {'name': 'Bob', 'age': 25})
-    #records = db.fetch_records('users')
-    #print(records)
-    #db.delete_records('users', 'age < 30')
-    #records = db.fetch_records('users')
-    #print(records)
     db.close()
